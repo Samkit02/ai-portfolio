@@ -5,7 +5,7 @@ import type { Tool } from "@/types/tool";
 import { ToolSandbox } from "@/components/tools/ToolSandbox";
 import Link from "next/link";
 
-const REPO_URL = "https://github.com/Samkit02/ai_portfolio";
+const REPO_URL = "https://github.com/Samkit02/ai-portfolio";
 const LOCAL_KEY_STORAGE = "samkit_anthropic_api_key";
 
 interface ToolPageClientProps {
