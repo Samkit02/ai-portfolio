@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Section 8: Tools Marketplace + Stripe + Auth ───────────────────────────
+
+enum Plan {
+  FREE
+  STARTER
+  PRO
+  TEAM
+}
+
+model User {
+  id                String   @id @default(cuid())
+  clerkId           String   @unique
+  email             String   @unique
+  tokenBalance      Int      @default(0)
+  plan              Plan     @default(FREE)
+  stripeCustomerId  String?  @unique
+  createdAt         DateTime @default(now())
+
+  usageLogs     UsageLog[]
+  subscriptions Subscription[]
+}
+
+/// Anonymous trial session (no login): keyed by browser sessionId.
+model TrialSession {
+  id         String   @id @default(cuid())
+  sessionId  String   @unique
+  toolSlug   String
+  tokensUsed Int      @default(0)
+  startedAt  DateTime @default(now())
+  expiresAt  DateTime
+  expired    Boolean  @default(false)
+}
+
+model UsageLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolSlug    String
+  tokensInput Int
+  tokensOutput Int
+  createdAt   DateTime @default(now())
+}
+
+model Subscription {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubId      String   @unique
+  stripePriceId    String
+  plan             Plan
+  status           String   // active, canceled, past_due
+  currentPeriodEnd DateTime
+  createdAt        DateTime @default(now())
+}

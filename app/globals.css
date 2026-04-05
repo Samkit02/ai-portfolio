@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Design system — match samkit-portfolio.html */
+:root {
+  --bg: #040408;
+  --surface: #0c0c14;
+  --border: #1a1a2e;
+  --accent: #6c63ff;
+  --accent2: #ff6b6b;
+  --accent3: #43e97b;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --glow: rgba(108, 99, 255, 0.15);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-accent3: var(--accent3);
+  --color-muted: var(--muted);
+  --color-glow: var(--glow);
+  --font-sans: var(--font-cabinet);
+  --font-mono: var(--font-dm-mono);
+  --font-display: var(--font-syne);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-cabinet), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Optional: noise overlay for texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* Scroll reveal base — toggled via JS/hook */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Three.js hero background: canvas and R3F container must fill the section */
+.hero-three-bg,
+.hero-three-bg > div,
+.hero-three-bg canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+@keyframes scrollLine {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
