@@ -14,7 +14,10 @@ function getClient(overrideKey?: string) {
   return anthropic;
 }
 
-const DEFAULT_MODEL = "claude-sonnet-4-20250514";
+// Sonnet 5.5 thinks by default and thinking counts toward max_tokens (1500
+// per tool); low effort keeps it brief so the reply is not cut short.
+const DEFAULT_MODEL = "claude-sonnet-5-5";
+const OUTPUT_CONFIG = { effort: "low" as const };
 
 /** System prompt with optional prompt caching (ephemeral). */
 function systemWithCache(system: string, useCache = true) {
@@ -44,6 +47,7 @@ export async function runClaude(options: RunClaudeOptions, useCache = true): Pro
   const response = await anthropic.messages.create({
     model: DEFAULT_MODEL,
     max_tokens: maxTokens,
+    output_config: OUTPUT_CONFIG,
     system: systemWithCache(system, useCache),
     messages: messages.map((m) => ({
       role: m.role as "user",
@@ -165,6 +169,7 @@ export function streamClaude(
   const stream = client.messages.stream({
     model: DEFAULT_MODEL,
     max_tokens: maxTokens,
+    output_config: OUTPUT_CONFIG,
     system: systemWithCache(system),
     messages: messages.map((m) => ({ role: m.role as "user", content: m.content })),
   });
